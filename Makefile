@@ -6,12 +6,14 @@ CHAPTERS = \
 	chap/intro.md \
 	chap/hello.md \
 	chap/cli_tools.md \
-	chap/symbol.md \
 	chap/strings.md \
+	chap/symbol.md \
 	chap/hashes.md \
+	chap/range.md \
 	chap/vars.md \
 	chap/classes_modules.md \
 	chap/methods.md \
+	chap/err.md \
 	chap/gems.md \
 	chap/ref.md \
 	chap/colophon.md

@@ -1,5 +1,81 @@
 # Methods
 
+## Conventions
+
+It is recommended that you name your C functions using the same conventions
+the mruby developers have employed for the mruby standard library:
+
+  - If the Ruby method name ends with a "?", then the C function name should
+    end with "\_p". Example: `#empty?` becomes `empty_p()`.
+
+  - If the Ruby method name ends with a "!", then the C function name should
+    end with "\_bang". Example: `#collect!` becomes `collect_bang()`.
+
+
+## Getting arguments with mrb\_get\_args()
+
+From src/class.c:
+
+    /*
+      retrieve arguments from mrb_state.
+
+      mrb_get_args(mrb, format, ...)
+
+      returns number of arguments parsed.
+
+      format specifiers:
+
+        string  mruby type     C type                 note
+        --------------------------------------------------------------------
+        o:      Object         [mrb_value]
+        C:      class/module   [mrb_value]
+        S:      String         [mrb_value]
+        A:      Array          [mrb_value]
+        H:      Hash           [mrb_value]
+        s:      String         [char*,int]            Receive two arguments.
+        z:      String         [char*]                NUL terminated string.
+        a:      Array          [mrb_value*,mrb_int]   Receive two arguments.
+        f:      Float          [mrb_float]
+        i:      Integer        [mrb_int]
+        b:      Boolean        [mrb_bool]
+        n:      Symbol         [mrb_sym]
+        &:      Block          [mrb_value]
+        *:      rest argument  [mrb_value*,int]       Receive the rest of the arguments as an array.
+        |:      optional                              Next argument of '|' and later are optional.
+     */
+    int mrb_get_args(mrb_state *mrb, const char *format, ...)
+
+  - "o" &mdash; Object &mdash; `mrb_value`
+  - "C" &mdash; class/module &mdash; `mrb_value`
+  - "S" &mdash; String &mdash; `mrb_value`
+  - "A" &mdash; Array &mdash; `mrb_value`
+  - "H" &mdash; Hash &mdash; `mrb_value`
+  - "s" &mdash; String &mdash; `[char*, int]`
+  - "z" &mdash; String &mdash; `char*`
+  - "a" &mdash; Array &mdash; `[mrb_value*, mrb_int]`
+  - "f" &mdash; Float &mdash; `mrb_float`
+  - "i" &mdash; Integer &mdash; `mrb_int`
+  - "b" &mdash; Boolean &mdash; `mrb_bool`
+  - "n" &mdash; Symbol &mdash; `mrb_sym`
+  - "&" &mdash; Block &mdash; `mrb_value`
+  - "\*" &mdash; "rest" &mdash; `[mrb_value*, int]`
+  - "|" &mdash; optional
+
+Some examples:
+
+    /* Require 1 Object */
+    mrb_get_args(R, "o", ...);
+
+    /* Require 2 integers with an optional block */
+    mrb_get_args(R, "ii|&", ...);
+
+## The relevant functions
+
+    #include <mruby.h>
+    mrb_value mrb_funcall(mrb_state*, mrb_value, const char*, int,...);
+    mrb_value mrb_funcall_argv(mrb_state*, mrb_value, mrb_sym, int, mrb_value*);
+    mrb_value mrb_funcall_with_block(mrb_state*, mrb_value, mrb_sym, int, mrb_value*, mrb_value);
+
 ## Define an instance method
 
 .

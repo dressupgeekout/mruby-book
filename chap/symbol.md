@@ -17,6 +17,15 @@ this is not necessarily the case with strings.
 Nevertheless, the internal representation of both mruby symbols _and_
 strings is a C string.
 
+Observe that type `mrb_sym` is actually an integer typedef:
+
+    /* mruby/value.h: line 51 */
+    typedef short mrb_sym;
+
+This is evidence that thinking about symbols as "lightweight strings" is not
+entirely removed from the truth.
+
+
 ## The relevant functions
 
     #include <mruby.h>
@@ -35,15 +44,28 @@ strings is a C string.
     mrb_value mrb_str_format(mrb_state *, int, const mrb_value *, mrb_value);
 
 
-### Convert a C string to a Ruby symbol
+## Creating a new Ruby Symbol
 
-.
+We can create a new Symbol object from a zero-terminated C string with the
+`mrb_intern_cstr()` function.
 
-### Convert a C string to a Ruby string
+    mrb_sym people_sym = mrb_intern_cstr(R, "people");
 
-.
+If the string is not zero-terminated, or if you want to put a restriction on
+the size of the C string for extra security, you can use the `mrb_intern()`
+function instead:
 
+    char *people_str = "people";
+    mrb_sym people_sym = mrb_intern(R, people_str, strlen(people_str));
 
-### Get a C string from a Ruby string
+If you already have a Ruby String object, you can convert it to a Symbol
+with `mrb_intern_str()`. This is equivalent to calling `String#to_sym` or
+`String#intern`.
 
-.
+    # Ruby
+    fox_str = "Fox Small"
+    fox_sym = fox_str.to_sym
+
+    /* C */
+    mrb_value fox_str = mrb_str_new_cstr(R, "Fox Small");
+    mrb_sym fox_sym = mrb_intern_str(R, fox_str);

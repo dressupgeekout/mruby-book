@@ -84,11 +84,18 @@ named `L` to refer to the Lua state:
 
     lua_State *L;
 
-I have grown accustomed to this, so I similarly insist on the mruby state to
+I have grown accustomed to this, so I similarly insist that the mruby state
 be named `R`:
 
     mrb_state *R;
 
+Unfortunately, version 1.0.0 of mruby makes some assumptions about the name
+of the `mrb_state *` variable. Most notably, the convenience macros listed
+in the "Errors and Exceptions" chapter require that the name of the mruby
+state be `mrb`. Although this is the convention used throughout mruby's
+source, I personally find it extremely difficult to read &mdash; virtually
+_every_ function in mruby is prefixed with "mrb\_", so adding yet another
+"mrb" for every function call is outright confusing.
 
 
 ## The mruby State
