@@ -46,17 +46,17 @@ entirely removed from the truth.
 
 ## Creating a new Ruby Symbol
 
-We can create a new Symbol object from a zero-terminated C string with the
+We can create a new Symbol object from a NUL-terminated C string with the
 `mrb_intern_cstr()` function.
 
     mrb_sym people_sym = mrb_intern_cstr(R, "people");
 
-If the string is not zero-terminated, or if you want to put a restriction on
+If the string is not NUL-terminated, or if you want to put a restriction on
 the size of the C string for extra security, you can use the `mrb_intern()`
 function instead:
 
     char *people_str = "people";
-    mrb_sym people_sym = mrb_intern(R, people_str, strlen(people_str));
+    mrb_sym people_sym = mrb_intern(R, people_str, 6);
 
 If you already have a Ruby String object, you can convert it to a Symbol
 with `mrb_intern_str()`. This is equivalent to calling `String#to_sym` or

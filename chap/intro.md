@@ -32,7 +32,8 @@ for itself.
 
 ### Let your C program be scriptable with Ruby
 
-.
+The primary use case for mruby is to allow a program to be extended by users
+in a language they already love.
 
 
 ### Make your C program more object-oriented without too much fuss

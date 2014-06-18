@@ -66,6 +66,84 @@ The top-level header file `<mruby.h>` specifies an interface.
     void mrb_gc_free_mt(mrb_state*, struct RClass*);
 
 
+## The Base Classes
+
+Some classes are so fundamental to the Ruby language, they are accessible
+directly from the mruby state. In other words, no matter where or when you
+need the mruby state, these classes always come along for the ride. This is
+an excerpt from the definition of the `mrb_state` structure:
+
+    #include <mruby.h>
+
+    typedef struct mrb_state {
+      /* ... */
+
+      struct RClass *object_class;
+      struct RClass *class_class;
+      struct RClass *module_class;
+      struct RClass *proc_class;
+      struct RClass *string_class;
+      struct RClass *array_class;
+      struct RClass *hash_class;
+
+      /* ... */
+
+      struct RClass *float_class;
+      struct RClass *fixnum_class;
+      struct RClass *true_class;
+      struct RClass *false_class;
+      struct RClass *nil_class;
+      struct RClass *symbol_class;
+      struct RClass *kernel_module;
+
+      /* ... */
+
+      struct RClass *eException_class;
+      struct RClass *eStandardError_class;
+
+      /* ... */
+    } mrb_state;
+
+Any time you need to reference one of these classes, you don't need to call
+`mrb_class_get()`. Instead, it is faster to directly refer to the `struct
+RClass *` that is already defined in the mruby state.
+
+    /* This is inefficient: */
+    mrb_value person_class =
+      mrb_define_class(R, "Person", mrb_class_get(R, "Object"));
+
+    /* This is better: */
+    mrb_value person_class =
+      mrb_define_class(R, "Person", R->object_class);
+
+
+## Where is BasicObject?
+
+You may have heard of Ruby's `BasicObject`, which is a class that ships with
+the Ruby standard library that has an incredibly limited interface. It is
+essentially just like a regular `Object` but with the entire `Kernel` module
+taken out. The reason we tend to create classes that inherit from `Object`
+and not `BasicObject` in the first place is because we usually want all of
+the methods inside the `Kernel` module.
+
+You may want to use the `BasicObject` class if your application is
+particularly conservative about resources. However, the `mrb_state`
+structure does not contain a direct reference to the `BasicObject` class. In
+this case you are going to have to search for it with `mrb_class_get():`
+
+    mrb_value basicobject_class = mrb_class_get(R, "BasicObject");
+
+
+## Note
+
+Notice that `struct RClass` represents both Ruby classes and Ruby modules.
+Also notice that a class must have a superclass, whereas a module must not.
+
+    #include <mruby.h>
+    struct RClass *mrb_define_class(mrb_state *, const char *name, struct RClass *super);
+    struct RClass *mrb_define_module(mrb_state *, const char *name);
+
+
 ## The mruby function type
 
 mruby defines a kind of function pointer called `mrb_funct_t`:
@@ -74,13 +152,3 @@ mruby defines a kind of function pointer called `mrb_funct_t`:
 
 In plain English, this means "a variable of type `mrb_func_t` is a function
 with two arguments: the mruby state and a value, and returns a value."
-
-
-## Note
-
-Notice that `struct RClass` represents both Ruby classes and Ruby modules.
-Also notice that a class must have a superclass, whereas a module does not.
-
-    #include <mruby.h>
-    struct RClass *mrb_class_new(mrb_state *mrb, struct RClass *super);
-    struct RClass *mrb_module_new(mrb_state *mrb);
