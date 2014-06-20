@@ -2,7 +2,7 @@
 
 ## Fetching mruby
 
-At the time of this writing (June 2014), there is only one public release of
+At the time of this writing (mid-2014), there is only one public release of
 mruby: version 1.0.0. You can download the source code in a Zip archive from
 http://mruby.org.
 
@@ -34,9 +34,7 @@ reason you can't simply include everything in your project:
 
 Here is the obligatory first program:
 
-    #include <stdio.h>
     #include <stdlib.h>
-
     #include <mruby.h>
     #include <mruby/compile.h>
 
@@ -46,15 +44,15 @@ Here is the obligatory first program:
       mrb_state *R;
 
       R = mrb_open();
-      mrb_string_XXX();
+      mrb_load_string(R, "puts 'hello, world'");
       mrb_close(R);
       return EXIT_SUCCESS;
     }
 
 
 You can compile it with a Makefile that looks like this. (Note that I use
-the BSD version of make(1), which actually defines the readable macros
-`.TARGET` and `.ALLSRC`.)
+the BSD version of make(1), which defines the readable macros `.TARGET` and
+`.ALLSRC`.)
 
     .PHONY: clean
     .SUFFIXES: .c .o
@@ -71,7 +69,7 @@ the BSD version of make(1), which actually defines the readable macros
         $(CC) -c $(CFLAGS) -o $(.TARGET) $(.ALLSRC)
 
     clean:
-        rm -f hello
+        rm -f hello main.o
 
 The main thing to notice about the Makefile is that you have to link against
 both the mruby and math libraries, that is, `-lmruby -lm`.

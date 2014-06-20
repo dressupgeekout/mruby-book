@@ -10,16 +10,21 @@ COMPILE = $(CC) $(LDFLAGS) -o $(.TARGET) $(.ALLSRC) $(LIBS)
 
 MODULES = \
 	helloworld \
-	classes
+	classes \
+	methods
 
 all: \
 	helloworld/helloworld \
-	classes/classes
+	classes/classes \
+	methods/methods
 
 helloworld/helloworld: helloworld/helloworld.o
 	$(COMPILE)
 
 classes/classes: classes/classes.o
+	$(COMPILE)
+
+methods/methods: methods/methods.o
 	$(COMPILE)
 
 .c.o:
