@@ -113,3 +113,59 @@ type.
 
 **XXX What is the difference between mruby's "proc" and "closure" ? Probably
 closure == block.**
+
+
+-----
+
+## Example
+
+This is an excerpt from src/kernel.c. Do you see how the Ruby method
+translates in to C?
+
+    /* 15.3.1.3.22 */
+    /*
+     *  call-seq:
+     *     obj.instance_variable_set(symbol, obj)    -> obj
+     */
+    mrb_value
+    mrb_obj_ivar_set(mrb_state *mrb, mrb_value self)
+    {
+      mrb_sym iv_name_id;
+      mrb_value iv_name, val;
+
+      mrb_get_args(mrb, "oo", &iv_name, &val);
+
+      iv_name_id = get_valid_iv_sym(mrb, iv_name);
+      mrb_iv_set(mrb, self, iv_name_id, val);
+      return val;
+    }
+
+The `mrb_obj_ivar_set()` function is referenced at the end of the file,
+inside the definition of `mrb_init_kernel()`. Here is an excerpt: 
+
+    void
+    mrb_init_kernel(mrb_state *mrb)
+    {
+      struct RClass *krn;
+
+      krn = mrb->kernel_module = mrb_define_module(mrb, "Kernel");
+
+      /* ... */
+
+      /* 15.3.1.3.22 */
+      mrb_define_method(mrb, krn, "instance_variable_set", mrb_obj_ivar_set,
+        MRB_ARGS_REQ(2));
+
+      /* ... */
+
+      mrb_include_module(mrb, mrb->object_class, mrb->kernel_module);
+      mrb_alias_method(mrb, mrb->module_class, mrb_intern_lit(mrb, "dup"),
+        mrb_intern_lit(mrb, "clone"));
+    }
+
+In other words:
+
+  - `mrb_define_method()` tells the mruby state that we are creating an
+    instance method. (You would use `mrb_define_class_method()` if you
+    wanted to create a class method.)
+

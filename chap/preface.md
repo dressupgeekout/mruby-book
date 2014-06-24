@@ -9,6 +9,3 @@ assume that the reader has already used the traditional Ruby/C API that
 comes with "Matz's Ruby Interpreter" (MRI). Readers who come from a Tcl or
 Lua background will feel especially at home and be able to dive right into
 the code examples. 
-
-_The mruby Cookbook_ is in no way whatsoever an introduction to programming.
-It is intended to be a quick reference that is pragmatic and easy to read.

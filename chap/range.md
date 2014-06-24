@@ -22,6 +22,8 @@ excluded.
     range1 = (0...10) # excludes 10
     range2 = (0..10) # includes 10
 
+<!-- -->
+
     /* C */ /* XXX fixme!! */
     #include <stdbool.h>
     mrb_value range1 = mrb_range_new(R, 0, 10, true); /* excludes 10 */

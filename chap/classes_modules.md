@@ -134,6 +134,13 @@ this case you are going to have to search for it with `mrb_class_get():`
     mrb_value basicobject_class = mrb_class_get(R, "BasicObject");
 
 
+## What's the difference between "struct RClass" and "Class" ?
+
+There is a subtle but significant difference between `struct RClass` and
+`Class`. `struct RClass` is _not_ a Ruby object. It is the C implementation
+of classes. `Class`, on the other hand, _is_ a Ruby object.
+
+
 ## Note
 
 Notice that `struct RClass` represents both Ruby classes and Ruby modules.
@@ -148,7 +155,34 @@ Also notice that a class must have a superclass, whereas a module must not.
 
 mruby defines a kind of function pointer called `mrb_funct_t`:
 
-    typedef mrb_value (*mrb_func_t)(mrb_state *mrb, mrb_value);
+    typedef mrb_value (*mrb_func_t)(mrb_state *mrb, mrb_value obj);
 
 In plain English, this means "a variable of type `mrb_func_t` is a function
 with two arguments: the mruby state and a value, and returns a value."
+
+
+## Including a module inside a class
+
+To include a module inside of a class, we use the `mrb_include_module()`
+function:
+
+    void mrb_include_module(mrb_state*, struct RClass *klass, struct RClass *module);
+
+As an example, let's make a `RecordCollection` class Enumerable:
+
+    # Ruby
+    class RecordCollection
+      include Enumerable
+    end
+
+<!-- -->
+
+    /* C */
+    struct RClass *record_collection = mrb_class_get(R, "RecordCollection");
+    struct RClass *enumerable = mrb_class_get(R, "Enumerable");
+    mrb_include_module(R, record_collection, enumerable);
+
+Note that this is not a complete implementation of the `RecordCollection`
+class. Specifically, the definition of `RecordCollection#each` is missing,
+which is required in order to make `Enumerable` useful. The point is to
+illustrate what the mruby code looks like.

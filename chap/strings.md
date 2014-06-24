@@ -20,52 +20,63 @@ strings.
     mrb_value mrb_str_literal(mrb_state*, mrb_value);
     void mrb_str_concat(mrb_state*, mrb_value, mrb_value);
     mrb_value mrb_str_plus(mrb_state*, mrb_value, mrb_value);
-    mrb_value mrb_ptr_to_str(mrb_state *, void*);
-    mrb_value mrb_obj_as_string(mrb_state *mrb, mrb_value obj);
-    mrb_value mrb_str_resize(mrb_state *mrb, mrb_value str, mrb_int len);
-    mrb_value mrb_str_substr(mrb_state *mrb, mrb_value str, mrb_int beg, mrb_int len);
-    mrb_value mrb_string_type(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_check_string_type(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_str_buf_new(mrb_state *mrb, mrb_int capa);
-    mrb_value mrb_str_buf_cat(mrb_state *mrb, mrb_value str, const char *ptr, size_t len);
+    mrb_value mrb_ptr_to_str(mrb_state*, void*);
+    mrb_value mrb_obj_as_string(mrb_state*, mrb_value obj);
+    mrb_value mrb_str_resize(mrb_state*, mrb_value str, mrb_int len);
+    mrb_value mrb_str_substr(mrb_state*, mrb_value str, mrb_int beg, mrb_int len);
+    mrb_value mrb_string_type(mrb_state*, mrb_value str);
+    mrb_value mrb_check_string_type(mrb_state*, mrb_value str);
+    mrb_value mrb_str_buf_new(mrb_state*, mrb_int capa);
+    mrb_value mrb_str_buf_cat(mrb_state*, mrb_value str, const char *ptr, size_t len);
 
-    char *mrb_string_value_cstr(mrb_state *mrb, mrb_value *ptr);
-    char *mrb_string_value_ptr(mrb_state *mrb, mrb_value ptr);
-    int mrb_str_offset(mrb_state *mrb, mrb_value str, int pos);
-    mrb_value mrb_str_dup(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_str_intern(mrb_state *mrb, mrb_value self);
-    mrb_value mrb_str_cat_cstr(mrb_state *, mrb_value, const char *);
-    mrb_value mrb_str_to_inum(mrb_state *mrb, mrb_value str, int base, int badcheck);
-    double mrb_str_to_dbl(mrb_state *mrb, mrb_value str, int badcheck);
-    mrb_value mrb_str_to_str(mrb_state *mrb, mrb_value str);
-    mrb_int mrb_str_hash(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_str_buf_append(mrb_state *mrb, mrb_value str, mrb_value str2);
-    mrb_value mrb_str_inspect(mrb_state *mrb, mrb_value str);
-    mrb_bool mrb_str_equal(mrb_state *mrb, mrb_value str1, mrb_value str2);
-    mrb_value mrb_str_dump(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_str_cat(mrb_state *mrb, mrb_value str, const char *ptr, size_t len);
-    mrb_value mrb_str_append(mrb_state *mrb, mrb_value str, mrb_value str2);
+    char *mrb_string_value_cstr(mrb_state*, mrb_value *ptr);
+    char *mrb_string_value_ptr(mrb_state*, mrb_value ptr);
+    int mrb_str_offset(mrb_state*, mrb_value str, int pos);
+    mrb_value mrb_str_dup(mrb_state*, mrb_value str);
+    mrb_value mrb_str_intern(mrb_state*, mrb_value self);
+    mrb_value mrb_str_cat_cstr(mrb_state*, mrb_value, const char *);
+    mrb_value mrb_str_to_inum(mrb_state*, mrb_value str, int base, int badcheck);
+    double mrb_str_to_dbl(mrb_state*, mrb_value str, int badcheck);
+    mrb_value mrb_str_to_str(mrb_state*, mrb_value str);
+    mrb_int mrb_str_hash(mrb_state*, mrb_value str);
+    mrb_value mrb_str_buf_append(mrb_state*, mrb_value str, mrb_value str2);
+    mrb_value mrb_str_inspect(mrb_state*, mrb_value str);
+    mrb_bool mrb_str_equal(mrb_state*, mrb_value str1, mrb_value str2);
+    mrb_value mrb_str_dump(mrb_state*, mrb_value str);
+    mrb_value mrb_str_cat(mrb_state*, mrb_value str, const char *ptr, size_t len);
+    mrb_value mrb_str_append(mrb_state*, mrb_value str, mrb_value str2);
 
-    int mrb_str_cmp(mrb_state *mrb, mrb_value str1, mrb_value str2);
-    char *mrb_str_to_cstr(mrb_state *mrb, mrb_value str);
-    mrb_value mrb_str_pool(mrb_state *mrb, mrb_value str);
+    int mrb_str_cmp(mrb_state*, mrb_value str1, mrb_value str2);
+    char *mrb_str_to_cstr(mrb_state*, mrb_value str);
+    mrb_value mrb_str_pool(mrb_state*, mrb_value str);
 
 
 ## Creating strings
 
     #include <mruby.h>
 
-    mrb_value mrb_str_new(mrb_state *mrb, const char *p, size_t len);
+    mrb_value mrb_str_new(mrb_state*, const char *p, size_t len);
     mrb_value mrb_str_new_cstr(mrb_state*, const char*);
-    mrb_value mrb_str_new_static(mrb_state *mrb, const char *p, size_t len);
+    mrb_value mrb_str_new_static(mrb_state*, const char *p, size_t len);
 
-You can create a Ruby String object from a regular null-terminated C string:
+You can create a Ruby `String` object from a regular NUL-terminated C
+string:
 
     # Ruby
     foo = "chunky bacon"
 
+<!-- -->
+
     /* C */
     mrb_value foo = mrb_str_new_cstr(R, "chunky bacon");
+
+Alternatively, you can explicitly specify the length of a string with the
+`mrb_str_new()` function:
+
+    #include <string.h>
+
+    const char *foo_str = "chunky bacon";
+    mrb_value foo = mrb_str_new(R, foo_str, strlen(foo_str));
 
 
 ## Concatenating strings
@@ -76,16 +87,16 @@ The following functions will help with string concatenation:
 
     void mrb_str_concat(mrb_state*, mrb_value, mrb_value);
     mrb_value mrb_str_plus(mrb_state*, mrb_value, mrb_value);
-    mrb_value mrb_str_buf_cat(mrb_state *mrb, mrb_value str, const char *ptr, size_t len);
-    mrb_value mrb_str_cat_cstr(mrb_state *, mrb_value, const char *);
-    mrb_value mrb_str_buf_append(mrb_state *mrb, mrb_value str, mrb_value str2);
-    mrb_value mrb_str_cat(mrb_state *mrb, mrb_value str, const char *ptr, size_t len);
-    mrb_value mrb_str_append(mrb_state *mrb, mrb_value str, mrb_value str2);
+    mrb_value mrb_str_buf_cat(mrb_state*, mrb_value str, const char *ptr, size_t len);
+    mrb_value mrb_str_cat_cstr(mrb_state*, mrb_value, const char *);
+    mrb_value mrb_str_buf_append(mrb_state*, mrb_value str, mrb_value str2);
+    mrb_value mrb_str_cat(mrb_state*, mrb_value str, const char *ptr, size_t len);
+    mrb_value mrb_str_append(mrb_state*, mrb_value str, mrb_value str2);
 
 
 ### Concatenating Ruby String objects
 
-The `mrb_str_plus()` function will concatenate two Ruby String objects, as
+The `mrb_str_plus()` function will concatenate two Ruby `String` objects, as
 if they were using the "plus" operator:
 
     # Ruby
@@ -93,6 +104,8 @@ if they were using the "plus" operator:
     last = "Polo"
     together = first + last
     puts together
+
+<!-- -->
 
     /* C */
     #include <stdio.h>
@@ -104,8 +117,21 @@ if they were using the "plus" operator:
     mrb_value together = mrb_str_plus(R, first, last);
     printf("%s\n", mrb_str_to_cstr(R, together));
 
+In both cases, we see "MarcoPolo" written to the standard output.
 
-### Retrieving a C string from a Ruby String
+### Concatenate a Ruby String object with a C string
+
+To concatenate a Ruby `String` with a C string, use the `mrb_str_cat_cstr()`
+function.
+
+    mrb_value fragment = mrb_str_new_cstr(R, "chunky ");
+    mrb_value complete_phrase = mrb_str_cat_cstr(R, fragment, "bacon");
+
+The `complete_phrase` variable is a Ruby `String` which denotes the text
+"chunky bacon".
+
+
+## Retrieving a C string from a Ruby String
 
 You can get a C string from a Ruby String with the `mrb_str_to_cstr()`
 function.
