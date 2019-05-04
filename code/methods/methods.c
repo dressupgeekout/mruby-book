@@ -1,6 +1,6 @@
 /*
  * methods.c
- * Christian Koch <cfkoch@sdf.lonestar.org>
+ * Charlotte Koch <cfkoch@sdf.lonestar.org>
  */
 
 #include <stdlib.h>

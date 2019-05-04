@@ -4,7 +4,7 @@
 <a name="about-the-author"></a>
 ## About the Author
 
-Christian Koch is a longtime Rubyist.
+Charlotte Koch is a longtime Rubyist.
 
 
 ## About this E-book
@@ -23,4 +23,4 @@ WXYZ.
 The content of this book is open source. The source is maintained inside of
 a Git repository hosted at GitHub:
 
-  - <http://github.com/christiank/mruby-cookbook>
+  - <http://github.com/dressupgeekout/mruby-book>

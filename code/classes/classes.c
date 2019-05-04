@@ -1,6 +1,6 @@
 /*
  * classes.c
- * Christian Koch <cfkoch@sdf.lonestar.org>
+ * Charlotte Koch <cfkoch@sdf.lonestar.org>
  *
  * In this program, we define a class Person, which is a subclass of class
  * Object. Then we instantiate a person and send #inspect to it, which

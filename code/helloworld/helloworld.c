@@ -1,6 +1,6 @@
 /*
  * helloworld.c
- * Christian Koch <cfkoch@sdf.lonestar.org>
+ * Charlotte Koch <cfkoch@sdf.lonestar.org>
  *
  * This is the canonical "Hello World" program. It uses mrb_load_string(),
  * which is a very high-level (and slightly slower) way of acheiving this.
